@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Django
+backend/db.sqlite3
+backend/media/
+backend/staticfiles/
+*.log
+
+# Environment
+.env
+venv/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Xcode
+client/Klub51/build/
+client/Klub51/DerivedData/
+*.xcuserdata
+*.xcworkspace/xcuserdata/

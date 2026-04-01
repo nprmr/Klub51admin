@@ -1,0 +1,154 @@
+[
+  {
+    "model": "accounts.team",
+    "pk": 1,
+    "fields": {
+      "name": "Klub51 Studio",
+      "created_at": "2026-01-01T00:00:00Z",
+      "updated_at": "2026-01-01T00:00:00Z"
+    }
+  },
+  {
+    "model": "projects.projectstatus",
+    "pk": 1,
+    "fields": {
+      "name": "\u041d\u0430 \u043e\u0431\u0441\u0443\u0436\u0434\u0435\u043d\u0438\u0438",
+      "color": "#3B82F6",
+      "order": 0,
+      "team": 1
+    }
+  },
+  {
+    "model": "projects.projectstatus",
+    "pk": 2,
+    "fields": {
+      "name": "\u0412 \u0440\u0430\u0437\u0440\u0430\u0431\u043e\u0442\u043a\u0435",
+      "color": "#F59E0B",
+      "order": 1,
+      "team": 1
+    }
+  },
+  {
+    "model": "projects.projectstatus",
+    "pk": 3,
+    "fields": {
+      "name": "\u0422\u0435\u0441\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435",
+      "color": "#8B5CF6",
+      "order": 2,
+      "team": 1
+    }
+  },
+  {
+    "model": "projects.projectstatus",
+    "pk": 4,
+    "fields": {
+      "name": "\u0412 \u043f\u0440\u043e\u0434\u0435",
+      "color": "#10B981",
+      "order": 3,
+      "team": 1
+    }
+  },
+  {
+    "model": "projects.projectstatus",
+    "pk": 5,
+    "fields": {
+      "name": "\u0410\u0440\u0445\u0438\u0432",
+      "color": "#6B7280",
+      "order": 4,
+      "team": 1
+    }
+  },
+  {
+    "model": "projects.project",
+    "pk": 1,
+    "fields": {
+      "title": "Klub51 Admin",
+      "description": "\u0412\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u044f\u044f \u0441\u0438\u0441\u0442\u0435\u043c\u0430 \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u044f \u043f\u0440\u043e\u0435\u043a\u0442\u0430\u043c\u0438",
+      "status": 2,
+      "team": 1,
+      "icon": "\ud83d\udee0",
+      "created_at": "2026-03-01T10:00:00Z",
+      "updated_at": "2026-04-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "projects.project",
+    "pk": 2,
+    "fields": {
+      "title": "MyApp iOS",
+      "description": "iOS \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435 \u0434\u043b\u044f \u043a\u043b\u0438\u0435\u043d\u0442\u043e\u0432",
+      "status": 4,
+      "team": 1,
+      "icon": "\ud83d\udcf1",
+      "created_at": "2025-06-01T10:00:00Z",
+      "updated_at": "2026-03-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "projects.project",
+    "pk": 3,
+    "fields": {
+      "title": "\u041d\u043e\u0432\u044b\u0439 \u043c\u0430\u0440\u043a\u0435\u0442\u043f\u043b\u0435\u0439\u0441",
+      "description": "\u0418\u0434\u0435\u044f \u043c\u0430\u0440\u043a\u0435\u0442\u043f\u043b\u0435\u0439\u0441\u0430 \u0434\u043b\u044f \u043b\u043e\u043a\u0430\u043b\u044c\u043d\u044b\u0445 \u043f\u0440\u043e\u0438\u0437\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u0435\u0439",
+      "status": 1,
+      "team": 1,
+      "icon": "\ud83d\udced",
+      "created_at": "2026-03-20T10:00:00Z",
+      "updated_at": "2026-03-28T10:00:00Z"
+    }
+  },
+  {
+    "model": "projects.technicalcard",
+    "pk": 1,
+    "fields": {
+      "project": 1,
+      "github_url": "https://github.com/nprmr/Klub51admin",
+      "appstore_url": "",
+      "figma_url": "",
+      "domain_name": "klub51.app",
+      "domain_registrar": "Namecheap",
+      "domain_expires": "2027-03-01",
+      "budget_required": "15000.00",
+      "budget_currency": "RUB",
+      "ad_cabinet_url": "",
+      "notes": "Django + SwiftUI \u0441\u0442\u0435\u043a",
+      "updated_at": "2026-04-01T10:00:00Z"
+    }
+  },
+  {
+    "model": "projects.technicalcard",
+    "pk": 2,
+    "fields": {
+      "project": 2,
+      "github_url": "https://github.com/nprmr/myapp-ios",
+      "appstore_url": "https://apps.apple.com/app/myapp/id123456789",
+      "figma_url": "https://figma.com/file/abc123",
+      "domain_name": "myapp.ru",
+      "domain_registrar": "REG.RU",
+      "domain_expires": "2027-06-15",
+      "budget_required": "50000.00",
+      "budget_currency": "RUB",
+      "ad_cabinet_url": "https://ads.apple.com",
+      "notes": "\u041e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u043f\u0440\u043e\u0434\u0443\u043a\u0442, \u043f\u0440\u0438\u043e\u0440\u0438\u0442\u0435\u0442 \u0432 \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u0435",
+      "updated_at": "2026-03-15T10:00:00Z"
+    }
+  },
+  {
+    "model": "projects.technicalcard",
+    "pk": 3,
+    "fields": {
+      "project": 3,
+      "github_url": "",
+      "appstore_url": "",
+      "figma_url": "",
+      "domain_name": "",
+      "domain_registrar": "",
+      "domain_expires": null,
+      "budget_required": null,
+      "budget_currency": "RUB",
+      "ad_cabinet_url": "",
+      "notes": "\u041f\u043e\u043a\u0430 \u043d\u0430 \u044d\u0442\u0430\u043f\u0435 \u0438\u0434\u0435\u0438",
+      "updated_at": "2026-03-28T10:00:00Z"
+    }
+  }
+]
