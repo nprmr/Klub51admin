@@ -9,9 +9,23 @@ struct ProjectRowView: View {
                 .font(.title3)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(project.title)
-                    .font(.body)
-                    .lineLimit(1)
+                HStack(spacing: 4) {
+                    Text(project.title)
+                        .font(.body)
+                        .lineLimit(1)
+
+                    if project.isFavorite == true {
+                        Image(systemName: "star.fill")
+                            .font(.caption2)
+                            .foregroundStyle(.yellow)
+                    }
+
+                    if project.isArchived == true {
+                        Image(systemName: "archivebox")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                }
 
                 if let pageCount = project.pageCount, pageCount > 0 {
                     Text("\(pageCount) стр.")
@@ -21,5 +35,6 @@ struct ProjectRowView: View {
             }
         }
         .padding(.vertical, 2)
+        .opacity(project.isArchived == true ? 0.6 : 1.0)
     }
 }

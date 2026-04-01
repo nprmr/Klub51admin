@@ -12,6 +12,21 @@ struct Klub51App: App {
         }
         .windowStyle(.automatic)
         .defaultSize(width: 1100, height: 700)
+        #if os(macOS)
+        .commands {
+            CommandGroup(after: .newItem) {
+                Button("Новый проект") {
+                    NotificationCenter.default.post(name: .newProjectShortcut, object: nil)
+                }
+                .keyboardShortcut("n", modifiers: [.command, .shift])
+
+                Button("Поиск") {
+                    NotificationCenter.default.post(name: .searchShortcut, object: nil)
+                }
+                .keyboardShortcut("k", modifiers: .command)
+            }
+        }
+        #endif
 
         #if os(macOS)
         Settings {
@@ -20,6 +35,13 @@ struct Klub51App: App {
         }
         #endif
     }
+}
+
+// MARK: - Notification names for keyboard shortcuts
+
+extension Notification.Name {
+    static let newProjectShortcut = Notification.Name("newProjectShortcut")
+    static let searchShortcut = Notification.Name("searchShortcut")
 }
 
 // MARK: - Settings

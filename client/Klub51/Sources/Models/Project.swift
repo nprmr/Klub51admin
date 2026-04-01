@@ -9,15 +9,20 @@ struct Project: Codable, Identifiable, Sendable {
     var statusName: String?
     var statusColor: String?
     let team: Int
+    var isArchived: Bool?
+    var isFavorite: Bool?
+    var order: Int?
     var pageCount: Int?
     var technicalCard: TechnicalCard?
     let createdAt: String
     let updatedAt: String
 
     enum CodingKeys: String, CodingKey {
-        case id, title, description, icon, status, team
+        case id, title, description, icon, status, team, order
         case statusName = "status_name"
         case statusColor = "status_color"
+        case isArchived = "is_archived"
+        case isFavorite = "is_favorite"
         case pageCount = "page_count"
         case technicalCard = "technical_card"
         case createdAt = "created_at"

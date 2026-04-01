@@ -53,6 +53,9 @@ class ProjectListSerializer(serializers.ModelSerializer):
             "status_name",
             "status_color",
             "team",
+            "is_archived",
+            "is_favorite",
+            "order",
             "page_count",
             "created_at",
             "updated_at",
@@ -78,6 +81,9 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
             "status_name",
             "status_color",
             "team",
+            "is_archived",
+            "is_favorite",
+            "order",
             "technical_card",
             "created_at",
             "updated_at",
@@ -87,4 +93,4 @@ class ProjectDetailSerializer(serializers.ModelSerializer):
 class ProjectCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ["id", "title", "description", "icon", "status", "team"]
+        fields = ["id", "title", "description", "icon", "status", "team", "is_archived", "is_favorite", "order"]

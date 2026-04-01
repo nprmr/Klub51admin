@@ -34,6 +34,28 @@ class PageViewSet(viewsets.ModelViewSet):
         return PageListSerializer
 
     @action(detail=True, methods=["post"])
+    def duplicate(self, request, pk=None):
+        page = self.get_object()
+        new_page = Page.objects.create(
+            project=page.project,
+            title=f"{page.title} (копия)",
+            icon=page.icon,
+            parent=page.parent,
+            order=page.order + 1,
+            created_by=request.user,
+        )
+        # Copy blocks
+        for block in page.blocks.all():
+            PageBlock.objects.create(
+                page=new_page,
+                block_type=block.block_type,
+                content=block.content,
+                order=block.order,
+            )
+        serializer = PageDetailSerializer(new_page)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=["post"])
     def reorder_blocks(self, request, pk=None):
         page = self.get_object()
         serializer = BlockReorderSerializer(data=request.data)

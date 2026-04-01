@@ -4,22 +4,36 @@ struct SidebarView: View {
     @Environment(AppState.self) private var appState
     @State private var viewModel = ProjectListViewModel()
     @State private var showNewProject = false
+    @State private var showArchived = false
     @State private var newProjectTitle = ""
     @Binding var selectedProjectId: Int?
 
     var body: some View {
         List(selection: $selectedProjectId) {
+            // Favorites section
+            let favorites = viewModel.projects.filter { $0.isFavorite == true }
+            if !favorites.isEmpty {
+                Section {
+                    ForEach(favorites) { project in
+                        projectRow(project)
+                    }
+                } header: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "star.fill")
+                            .font(.caption2)
+                            .foregroundStyle(.yellow)
+                        Text("Избранное")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+
             // Grouped by status
             ForEach(viewModel.groupedProjects, id: \.status.id) { group in
                 Section {
                     ForEach(group.projects) { project in
-                        ProjectRowView(project: project)
-                            .tag(project.id)
-                            .contextMenu {
-                                Button("Удалить", role: .destructive) {
-                                    Task { await viewModel.deleteProject(project) }
-                                }
-                            }
+                        projectRow(project)
                     }
                 } header: {
                     HStack(spacing: 6) {
@@ -37,8 +51,7 @@ struct SidebarView: View {
             if !viewModel.uncategorizedProjects.isEmpty {
                 Section("Без статуса") {
                     ForEach(viewModel.uncategorizedProjects) { project in
-                        ProjectRowView(project: project)
-                            .tag(project.id)
+                        projectRow(project)
                     }
                 }
             }
@@ -52,6 +65,15 @@ struct SidebarView: View {
                 } label: {
                     Image(systemName: "plus")
                 }
+                .keyboardShortcut("n", modifiers: .command)
+            }
+
+            ToolbarItem(placement: .automatic) {
+                Toggle(isOn: $showArchived) {
+                    Image(systemName: "archivebox")
+                }
+                .toggleStyle(.button)
+                .help("Показать архивные")
             }
 
             ToolbarItem(placement: .automatic) {
@@ -60,6 +82,7 @@ struct SidebarView: View {
                 } label: {
                     Image(systemName: "arrow.clockwise")
                 }
+                .keyboardShortcut("r", modifiers: .command)
             }
         }
         .overlay {
@@ -87,8 +110,49 @@ struct SidebarView: View {
         .task {
             await viewModel.loadData()
         }
+        .onChange(of: showArchived) { _, show in
+            viewModel.showArchived = show
+            Task { await viewModel.loadData() }
+        }
         .refreshable {
             await viewModel.loadData()
         }
+    }
+
+    @ViewBuilder
+    private func projectRow(_ project: Project) -> some View {
+        ProjectRowView(project: project)
+            .tag(project.id)
+            .contextMenu {
+                Button {
+                    Task { await viewModel.toggleFavorite(project) }
+                } label: {
+                    Label(
+                        project.isFavorite == true ? "Убрать из избранного" : "В избранное",
+                        systemImage: project.isFavorite == true ? "star.slash" : "star"
+                    )
+                }
+
+                Button {
+                    Task { await viewModel.toggleArchive(project) }
+                } label: {
+                    Label(
+                        project.isArchived == true ? "Разархивировать" : "В архив",
+                        systemImage: project.isArchived == true ? "tray.and.arrow.up" : "archivebox"
+                    )
+                }
+
+                Button {
+                    Task { await viewModel.duplicateProject(project) }
+                } label: {
+                    Label("Дублировать", systemImage: "doc.on.doc")
+                }
+
+                Divider()
+
+                Button("Удалить", role: .destructive) {
+                    Task { await viewModel.deleteProject(project) }
+                }
+            }
     }
 }
