@@ -24,6 +24,9 @@ enum APIEndpoint {
     case ssoConfig
     case ssoCallback
 
+    // Auth — Profile
+    case completeProfile
+
     // Auth — Connected accounts
     case connectedAccounts
     case disconnectAccount
@@ -87,6 +90,7 @@ enum APIEndpoint {
         case .ssoConfig: "/api/auth/sso/config/"
         case .ssoCallback: "/api/auth/sso/callback/"
 
+        case .completeProfile: "/api/auth/complete-profile/"
         case .connectedAccounts, .disconnectAccount: "/api/auth/connected-accounts/"
 
         // Teams
@@ -133,7 +137,7 @@ enum APIEndpoint {
              .archiveProject, .favoriteProject, .duplicateProject, .duplicatePage,
              .attachments:
             .post
-        case .updateProject, .updateTechnicalCard, .updatePage, .updateBlock:
+        case .updateProject, .updateTechnicalCard, .updatePage, .updateBlock, .completeProfile:
             .patch
         case .deleteProject, .deletePage, .deleteBlock, .attachmentDetail, .disconnectAccount:
             .delete

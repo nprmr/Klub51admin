@@ -236,9 +236,7 @@ struct LoginView: View {
                 .otpVerify,
                 body: VerifyBody(email: email, code: otpCode)
             )
-            KeychainHelper.shared.saveTokens(access: response.access, refresh: response.refresh)
-            appState.currentUser = response.user
-            appState.isAuthenticated = true
+            appState.handleAuthResponse(response)
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -275,9 +273,7 @@ struct LoginView: View {
                         last_name: credential.fullName?.familyName ?? ""
                     )
                 )
-                KeychainHelper.shared.saveTokens(access: response.access, refresh: response.refresh)
-                appState.currentUser = response.user
-                appState.isAuthenticated = true
+                appState.handleAuthResponse(response)
             } catch {
                 errorMessage = error.localizedDescription
             }

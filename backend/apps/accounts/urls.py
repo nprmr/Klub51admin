@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 from .auth_views import (
     AppleAuthView,
     AuthProvidersView,
+    CompleteProfileView,
     ConnectedAccountsView,
     GitHubAuthView,
     GoogleAuthView,
@@ -31,6 +32,8 @@ urlpatterns = [
     path("sso/callback/", SSOCallbackView.as_view(), name="sso-callback"),
     # Connected accounts
     path("connected-accounts/", ConnectedAccountsView.as_view(), name="connected-accounts"),
+    # Profile completion
+    path("complete-profile/", CompleteProfileView.as_view(), name="complete-profile"),
     # Providers info
     path("providers/", AuthProvidersView.as_view(), name="auth-providers"),
     # Teams

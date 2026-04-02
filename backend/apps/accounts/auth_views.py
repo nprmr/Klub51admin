@@ -27,18 +27,21 @@ from allauth.socialaccount.models import SocialAccount
 from .models import EmailOTP
 
 
-def get_tokens_for_user(user):
+def get_tokens_for_user(user, is_new=False, auth_provider="email"):
     """Generate JWT token pair for a user."""
     refresh = RefreshToken.for_user(user)
     return {
         "access": str(refresh.access_token),
         "refresh": str(refresh),
+        "is_new": is_new,
+        "auth_provider": auth_provider,
         "user": {
             "id": user.id,
             "username": user.username,
             "email": user.email,
             "first_name": user.first_name,
             "last_name": user.last_name,
+            "has_password": user.has_usable_password(),
         },
     }
 
@@ -145,7 +148,7 @@ class OTPVerifyView(APIView):
             user.save(update_fields=["username"])
 
         return Response(
-            get_tokens_for_user(user),
+            get_tokens_for_user(user, is_new=created, auth_provider="email"),
             status=status.HTTP_200_OK if not created else status.HTTP_201_CREATED,
         )
 
@@ -180,7 +183,7 @@ class BaseSocialAuthView(APIView):
         data = serializer.validated_data
 
         try:
-            user = self.authenticate_social(
+            user, is_new = self.authenticate_social(
                 request,
                 access_token=data.get("access_token"),
                 id_token=data.get("id_token"),
@@ -198,21 +201,22 @@ class BaseSocialAuthView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        return Response(get_tokens_for_user(user))
+        return Response(get_tokens_for_user(user, is_new=is_new, auth_provider=self.provider))
 
     def authenticate_social(self, request, access_token=None, id_token=None, code=None):
         raise NotImplementedError
 
     def _find_or_create_user(self, provider, uid, email, extra_data, first_name="", last_name=""):
-        """Shared logic: find by social account, then by email, or create."""
+        """Shared logic: find by social account, then by email, or create. Returns (user, is_new)."""
         try:
             social = SocialAccount.objects.get(provider=provider, uid=uid)
-            return social.user
+            return social.user, False
         except SocialAccount.DoesNotExist:
             pass
 
+        is_new = False
         if email:
-            user, _ = User.objects.get_or_create(
+            user, is_new = User.objects.get_or_create(
                 email=email.lower(),
                 defaults={
                     "username": email.split("@")[0],
@@ -226,11 +230,12 @@ class BaseSocialAuthView(APIView):
                 first_name=first_name,
                 last_name=last_name,
             )
+            is_new = True
 
         SocialAccount.objects.create(
             user=user, provider=provider, uid=uid, extra_data=extra_data,
         )
-        return user
+        return user, is_new
 
 
 class GitHubAuthView(BaseSocialAuthView):
@@ -548,4 +553,52 @@ class AuthProvidersView(APIView):
         return Response({
             "providers": providers,
             "client_ids": client_ids,
+        })
+
+
+# =============================================================================
+# Profile completion (after registration)
+# =============================================================================
+
+
+class CompleteProfileSerializer(serializers.Serializer):
+    first_name = serializers.CharField(max_length=30)
+    last_name = serializers.CharField(max_length=30)
+    password = serializers.CharField(min_length=8, required=False)
+
+
+class CompleteProfileView(APIView):
+    """
+    Complete user profile after registration.
+    Sets first_name, last_name, and optionally a password.
+    """
+
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request):
+        serializer = CompleteProfileSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        user = request.user
+        user.first_name = data["first_name"]
+        user.last_name = data["last_name"]
+
+        fields_to_update = ["first_name", "last_name"]
+
+        if data.get("password"):
+            user.set_password(data["password"])
+            fields_to_update.append("password")
+
+        user.save(update_fields=fields_to_update)
+
+        return Response({
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "has_password": user.has_usable_password(),
+            },
         })
