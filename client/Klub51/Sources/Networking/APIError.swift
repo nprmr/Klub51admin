@@ -15,7 +15,7 @@ enum APIError: LocalizedError {
         case .invalidURL:
             "Неверный URL сервера"
         case .unauthorized:
-            "Неверный логин или пароль"
+            "Сессия истекла или неверные данные"
         case .forbidden:
             "Нет доступа"
         case .notFound:

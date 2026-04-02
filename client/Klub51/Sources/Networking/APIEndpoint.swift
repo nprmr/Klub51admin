@@ -8,10 +8,25 @@ enum HTTPMethod: String {
 }
 
 enum APIEndpoint {
-    // Auth
-    case login(username: String, password: String)
+    // Auth — OTP
+    case otpRequest
+    case otpVerify
+    case authProviders
     case refreshToken(refresh: String)
     case me
+
+    // Auth — Social
+    case socialGitHub
+    case socialGoogle
+    case socialApple
+
+    // Auth — SSO
+    case ssoConfig
+    case ssoCallback
+
+    // Auth — Connected accounts
+    case connectedAccounts
+    case disconnectAccount
 
     // Teams
     case teams
@@ -58,13 +73,27 @@ enum APIEndpoint {
 
     var path: String {
         switch self {
-        case .login: "/api/auth/login/"
+        // Auth
+        case .otpRequest: "/api/auth/otp/request/"
+        case .otpVerify: "/api/auth/otp/verify/"
+        case .authProviders: "/api/auth/providers/"
         case .refreshToken: "/api/auth/refresh/"
         case .me: "/api/auth/me/"
 
+        case .socialGitHub: "/api/auth/social/github/"
+        case .socialGoogle: "/api/auth/social/google/"
+        case .socialApple: "/api/auth/social/apple/"
+
+        case .ssoConfig: "/api/auth/sso/config/"
+        case .ssoCallback: "/api/auth/sso/callback/"
+
+        case .connectedAccounts, .disconnectAccount: "/api/auth/connected-accounts/"
+
+        // Teams
         case .teams: "/api/auth/teams/"
         case .teamMembers(let id): "/api/auth/teams/\(id)/members/"
 
+        // Projects
         case .projects, .createProject: "/api/projects/"
         case .projectDetail(let id), .updateProject(let id), .deleteProject(let id):
             "/api/projects/\(id)/"
@@ -77,6 +106,7 @@ enum APIEndpoint {
 
         case .statuses: "/api/statuses/"
 
+        // Pages
         case .pages, .createPage: "/api/pages/"
         case .pageDetail(let id), .updatePage(let id), .deletePage(let id):
             "/api/pages/\(id)/"
@@ -98,13 +128,14 @@ enum APIEndpoint {
 
     var method: HTTPMethod {
         switch self {
-        case .login, .refreshToken, .createProject, .createPage, .reorderBlocks,
+        case .otpRequest, .otpVerify, .refreshToken, .socialGitHub, .socialGoogle,
+             .socialApple, .ssoCallback, .createProject, .createPage, .reorderBlocks,
              .archiveProject, .favoriteProject, .duplicateProject, .duplicatePage,
              .attachments:
             .post
         case .updateProject, .updateTechnicalCard, .updatePage, .updateBlock:
             .patch
-        case .deleteProject, .deletePage, .deleteBlock, .attachmentDetail:
+        case .deleteProject, .deletePage, .deleteBlock, .attachmentDetail, .disconnectAccount:
             .delete
         default:
             .get

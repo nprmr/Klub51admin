@@ -49,6 +49,7 @@ extension Notification.Name {
 struct SettingsView: View {
     @Environment(AppState.self) private var appState
     @State private var serverURL = KeychainHelper.shared.serverURL
+    @State private var connectedAccounts: [[String: Any]] = []
 
     var body: some View {
         Form {
@@ -70,6 +71,6 @@ struct SettingsView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 400, height: 250)
+        .frame(width: 400, height: 300)
     }
 }
